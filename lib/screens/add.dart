@@ -62,12 +62,17 @@ class _AddPageState extends State<AddPage> {
       showSuccessMessage("Todo List Added Successfully");
     } else {
       print("Creation Failed");
-        showSuccessMessage("Failed To Add Todo List");
+      showErrorMessage("Failed To Add Todo List");
       print(response.body);
     }
   }
 
   void showSuccessMessage(String message) {
+    final snackBar = SnackBar(content: Text(message));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void showErrorMessage(String message) {
     final snackBar = SnackBar(content: Text(message));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
