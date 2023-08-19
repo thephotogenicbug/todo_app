@@ -30,38 +30,50 @@ class _TodoListPageState extends State<TodoListPage> {
         visible: isLoading,
         replacement: RefreshIndicator(
           onRefresh: fetchTodo,
-          child: ListView.builder(
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                final item = items[index] as Map;
-                // Get ID
-                final id = item['_id'] as String;
-                return ListTile(
-                  leading: CircleAvatar(child: Text('${index + 1}')),
-                  title: Text(item['title']),
-                  subtitle: Text(item['description']),
-                  trailing: PopupMenuButton(onSelected: (value) {
-                    if (value == 'edit') {
-                      // Open Editor
-                      navigateToEditPage(item);
-                    } else if (value == 'delete') {
-                      // Delete and refresh
-                      deleteById(id);
-                    }
-                  }, itemBuilder: (context) {
-                    return [
-                      const PopupMenuItem(
-                        value: 'edit',
-                        child: Text("Edit"),
-                      ),
-                      const PopupMenuItem(
-                        value: 'delete',
-                        child: Text("Delete"),
-                      ),
-                    ];
-                  }),
-                );
-              }),
+          child: Visibility(
+            visible: items.isNotEmpty,
+            replacement: Center(
+              child: Text(
+                'No Todo Found',
+                style: Theme.of(context).textTheme.displaySmall,
+              ),
+            ),
+            child: ListView.builder(
+                padding: const EdgeInsets.all(12),
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  final item = items[index] as Map;
+                  // Get ID
+                  final id = item['_id'] as String;
+                  return Card(
+                    child: ListTile(
+                      leading: CircleAvatar(child: Text('${index + 1}')),
+                      title: Text(item['title']),
+                      subtitle: Text(item['description']),
+                      trailing: PopupMenuButton(onSelected: (value) {
+                        if (value == 'edit') {
+                          // Open Editor
+                          navigateToEditPage(item);
+                        } else if (value == 'delete') {
+                          // Delete and refresh
+                          deleteById(id);
+                        }
+                      }, itemBuilder: (context) {
+                        return [
+                          const PopupMenuItem(
+                            value: 'edit',
+                            child: Text("Edit"),
+                          ),
+                          const PopupMenuItem(
+                            value: 'delete',
+                            child: Text("Delete"),
+                          ),
+                        ];
+                      }),
+                    ),
+                  );
+                }),
+          ),
         ),
         child: const Center(child: CircularProgressIndicator()),
       ),
