@@ -57,6 +57,18 @@ class _AddPageState extends State<AddPage> {
     final response = await http.post(uri,
         body: jsonEncode(body), headers: {'Content-Type': 'application/json'});
     // show success message or fail message status
-    print(response.body);
+    if (response.statusCode == 201) {
+      print("Creation Success");
+      showSuccessMessage("Todo List Added Successfully");
+    } else {
+      print("Creation Failed");
+        showSuccessMessage("Failed To Add Todo List");
+      print(response.body);
+    }
+  }
+
+  void showSuccessMessage(String message) {
+    final snackBar = SnackBar(content: Text(message));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
