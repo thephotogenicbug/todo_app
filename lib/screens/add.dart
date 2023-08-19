@@ -59,6 +59,8 @@ class _AddPageState extends State<AddPage> {
     // show success message or fail message status
     if (response.statusCode == 201) {
       print("Creation Success");
+      titleController.text = "";
+      descriptionController.text = "";
       showSuccessMessage("Todo List Added Successfully");
     } else {
       print("Creation Failed");
