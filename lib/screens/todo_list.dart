@@ -28,7 +28,6 @@ class _TodoListPageState extends State<TodoListPage> {
       ),
       body: Visibility(
         visible: isLoading,
-        child:  Center(child: CircularProgressIndicator()),
         replacement: RefreshIndicator(
           onRefresh: fetchTodo,
           child: ListView.builder(
@@ -42,6 +41,7 @@ class _TodoListPageState extends State<TodoListPage> {
                 );
               }),
         ),
+        child: const Center(child: CircularProgressIndicator()),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: navigateToAddPage,
