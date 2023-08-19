@@ -12,6 +12,7 @@ class TodoListPage extends StatefulWidget {
 }
 
 class _TodoListPageState extends State<TodoListPage> {
+  bool isLoading = true;
   List items = [];
   @override
   void initState() {
@@ -25,16 +26,23 @@ class _TodoListPageState extends State<TodoListPage> {
       appBar: AppBar(
         title: const Text("Todo List"),
       ),
-      body: ListView.builder(
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            final item = items[index] as Map;
-            return ListTile(
-              leading: CircleAvatar(child: Text('${index + 1}')),
-              title: Text(item['title']),
-              subtitle: Text(item['description']),
-            );
-          }),
+      body: Visibility(
+        visible: isLoading,
+        child:  Center(child: CircularProgressIndicator()),
+        replacement: RefreshIndicator(
+          onRefresh: fetchTodo,
+          child: ListView.builder(
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                final item = items[index] as Map;
+                return ListTile(
+                  leading: CircleAvatar(child: Text('${index + 1}')),
+                  title: Text(item['title']),
+                  subtitle: Text(item['description']),
+                );
+              }),
+        ),
+      ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: navigateToAddPage,
         label: const Text("Add Todo"),
@@ -50,6 +58,9 @@ class _TodoListPageState extends State<TodoListPage> {
   }
 
   Future<void> fetchTodo() async {
+    setState(() {
+      isLoading = true;
+    });
     const url = "https://api.nstack.in/v1/todos?page=1&limit=10";
     final uri = Uri.parse(url);
     final response =
@@ -63,5 +74,8 @@ class _TodoListPageState extends State<TodoListPage> {
       });
       print(items);
     } else {}
+    setState(() {
+      isLoading = false;
+    });
   }
 }
