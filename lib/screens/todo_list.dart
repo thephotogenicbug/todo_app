@@ -43,6 +43,7 @@ class _TodoListPageState extends State<TodoListPage> {
                   trailing: PopupMenuButton(onSelected: (value) {
                     if (value == 'edit') {
                       // Open Editor
+                      navigateToEditPage();
                     } else if (value == 'delete') {
                       // Delete and refresh
                       deleteById(id);
@@ -71,7 +72,18 @@ class _TodoListPageState extends State<TodoListPage> {
     );
   }
 
-  void navigateToAddPage() {
+  void navigateToAddPage() async {
+    final route = MaterialPageRoute(
+      builder: (context) => const AddPage(),
+    );
+    await Navigator.push(context, route);
+    setState(() {
+      isLoading = true;
+    });
+    fetchTodo();
+  }
+
+  void navigateToEditPage() {
     final route = MaterialPageRoute(
       builder: (context) => const AddPage(),
     );
@@ -105,13 +117,37 @@ class _TodoListPageState extends State<TodoListPage> {
     final url = "https://api.nstack.in/v1/todos/$id";
     final uri = Uri.parse(url);
     final response = await http.delete(uri);
+    // Remove item from the list
     if (response.statusCode == 200) {
       final filter = items.where((element) => element['_id'] != id).toList();
       setState(() {
         items = filter;
       });
-      setState(() {});
-    } else {}
-    // Remove item from the list
+      showSuccessMessage("Todo List Deleted Successfully");
+    } else {
+      showErrorMessage("Error Deleting Todo List");
+    }
+  }
+
+  void showSuccessMessage(String message) {
+    final snackBar = SnackBar(
+      content: Text(
+        message,
+        style: const TextStyle(color: Colors.white),
+      ),
+      backgroundColor: Colors.green,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void showErrorMessage(String message) {
+    final snackBar = SnackBar(
+      content: Text(
+        message,
+        style: const TextStyle(color: Colors.white),
+      ),
+      backgroundColor: Colors.red,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
