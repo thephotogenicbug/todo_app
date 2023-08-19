@@ -75,21 +75,17 @@ class _AddPageState extends State<AddPage> {
         body: jsonEncode(body), headers: {'Content-Type': 'application/json'});
     // show success message or fail message status
     if (response.statusCode == 201) {
-      print("Creation Success");
       titleController.text = "";
       descriptionController.text = "";
       showSuccessMessage("Todo List Added Successfully");
     } else {
-      print("Creation Failed");
       showErrorMessage("Failed To Add Todo List");
-      print(response.body);
     }
   }
 
   Future<void> updateData() async {
     final todo = widget.todo;
     if (todo == null) {
-      print('You cannot call without todo data');
       return;
     }
     final id = todo['_id'];
