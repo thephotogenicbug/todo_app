@@ -8,6 +8,9 @@ class AddPage extends StatefulWidget {
 }
 
 class _AddPageState extends State<AddPage> {
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,11 +18,13 @@ class _AddPageState extends State<AddPage> {
         title: const Text("Add Todo"),
       ),
       body: ListView(padding: const EdgeInsets.all(20), children: [
-        const TextField(
-          decoration: InputDecoration(hintText: "Title"),
+        TextField(
+          controller: titleController,
+          decoration: const InputDecoration(hintText: "Title"),
         ),
-        const TextField(
-          decoration: InputDecoration(hintText: "Description"),
+        TextField(
+          controller: descriptionController,
+          decoration: const InputDecoration(hintText: "Description"),
           keyboardType: TextInputType.multiline,
           minLines: 5,
           maxLines: 8,
@@ -30,5 +35,15 @@ class _AddPageState extends State<AddPage> {
         ElevatedButton(onPressed: () {}, child: const Text("Submit"))
       ]),
     );
+  }
+
+  void submitData() {
+    // Get the data from form
+
+    final title = titleController.text;
+    final description = descriptionController.text;
+
+    // Submit data to the server
+    // show success message or fail message status
   }
 }
