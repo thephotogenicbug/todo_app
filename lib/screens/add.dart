@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class AddPage extends StatefulWidget {
   const AddPage({super.key});
@@ -32,18 +35,28 @@ class _AddPageState extends State<AddPage> {
         const SizedBox(
           height: 20,
         ),
-        ElevatedButton(onPressed: () {}, child: const Text("Submit"))
+        ElevatedButton(onPressed: submitData, child: const Text("Submit"))
       ]),
     );
   }
 
-  void submitData() {
+  Future<void> submitData() async {
     // Get the data from form
 
     final title = titleController.text;
     final description = descriptionController.text;
+    final body = {
+      'title': title,
+      'description': description,
+      'is_completed': false,
+    };
 
     // Submit data to the server
+    const url = "https://api.nstack.in/v1/todos";
+    final uri = Uri.parse(url);
+    final response = await http.post(uri,
+        body: jsonEncode(body), headers: {'Content-Type': 'application/json'});
     // show success message or fail message status
+    print(response.body);
   }
 }
